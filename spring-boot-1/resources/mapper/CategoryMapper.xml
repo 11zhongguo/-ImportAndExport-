@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zkdj.urlCheck.spring_boot_1.main.java.mapper.GovernmentUnitMapper">
+
+
+    <select id="saveGovernmentUnit"  resultType="java.lang.Integer"> 
+	    insert into t_government_unit 
+	    (website,home_page_url,unit,web_state,brief_url,unit_city,unit_name) 
+	    values 
+	    <foreach collection="list" item="item" index="index" separator=","> 
+	    	(#{item.website},#{item.homePageUrl},#{item.unit},#{item.webState},#{item.briefUrl},#{item.unitCity},#{item.unitName}) 
+	    </foreach> 
+    </select>
+    <update id="insertRulesSource"  parameterType="java.util.List">
+         <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+               update t_gather_rules_source
+               <set>
+                 <if test="item.regularName != null and item.regularName != '' ">
+                    Regular_Name = #{item.regularName},
+                </if>
+<!--                  <if test="item.indexUrl != null and item.indexUrl != '' ">
+                    Competent_Units = #{item.competentUnits},
+                </if> -->
+                 <!-- <if test="item.level != null  ">
+                    Level = #{item.level},
+                </if> -->
+               </set>
+               <where>
+                   Index_URL = #{item.indexUrl}
+            </where>
+        </foreach>
+	 </update>
+	<update id="GovernmentUnit"  parameterType="java.util.List">
+         <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+               update t_government_unit
+               <set>
+                    unit_name = #{item.unitName},
+               </set>
+               <where>
+                 ID= #{item.id} 
+            </where>
+        </foreach>
+	 </update>
+	<update id="updateRulesSource"  parameterType="java.util.List">
+         <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+               update t_gather_rules_source
+               <set>
+                 <if test="item.attributionInformation != null and item.attributionInformation != '' ">
+                    Attribution_Information = #{item.attributionInformation},
+                </if>
+               </set>
+               <where>
+                 ID= #{item.id} and Attribution_Information is null
+            </where>
+        </foreach>
+	 </update>
+	<update id="updateINRulesSource"  parameterType="com.zkdj.urlCheck.spring_boot_1.main.java.model.GatherRulesSource">
+               update t_gather_rules_source
+               <set>
+                    Attribution_Information = #{attributionInformation,jdbcType=VARCHAR},province = #{province,jdbcType=VARCHAR},city= #{city,jdbcType=VARCHAR},district=#{district,jdbcType=VARCHAR}
+               </set>
+               <where>
+                 ID= #{id,jdbcType=VARCHAR} 
+            </where>
+	 </update>
+	<update id="updateINSearchSource"  parameterType="com.zkdj.urlCheck.spring_boot_1.main.java.model.SearchEngineSource">
+               update t_search_engine_source
+               <set>
+                    Attribution_Information = #{attributionInformation,jdbcType=VARCHAR},province = #{province,jdbcType=VARCHAR},city= #{city,jdbcType=VARCHAR},district=#{district,jdbcType=VARCHAR}
+               </set>
+               <where>
+                 ID= #{id,jdbcType=VARCHAR} 
+            </where>
+	 </update>
+<!-- 	<update id="updateINRulesSource"  parameterType="com.zkdj.urlCheck.spring_boot_1.main.java.model.GatherRulesSource">
+               update t_gather_rules_source
+               <set>
+                    Attribution_Information = #{attributionInformation,jdbcType=VARCHAR}
+               </set>
+               <where>
+                 ID= #{id,jdbcType=VARCHAR} and Attribution_Information is null
+            </where>
+	 </update> -->
+    <select id="findGovernmentUnit"  resultType="com.zkdj.urlCheck.spring_boot_1.main.java.model.GovernmentUnit"> 
+    	SELECT
+		t2.unit competentUnits,t2.brief_url briefUrl,t1.`Level` level,t2.website
+		FROM
+		t_gather_rules_source t1 inner JOIN t_government_unit t2 ON t2.brief_url=t1.Index_URL 
+    </select>
+    <select id="findGovernmentUnitAll"  resultType="com.zkdj.urlCheck.spring_boot_1.main.java.model.GovernmentUnit"> 
+    	SELECT
+		unit,brief_url briefUrl,website,id,home_page_url homePageUrl,web_state webState,unit_city unitCity,unit_name unitName
+		FROM
+		t_government_unit
+    </select>
+    <select id="findGatherRulesSource"  resultType="com.zkdj.urlCheck.spring_boot_1.main.java.model.GatherRulesSource"> 
+    SELECT
+    	ID as id,
+		Regular_Name AS regularName,
+		Index_URL AS indexURL,
+		Attribution_Information AS attributionInformation,
+		LEVEL AS LEVEL,
+		Website_Nature AS websiteNature,
+		Competent_Units AS competentUnits,
+		Carrier_ID AS carrierID,
+		Configuration_Number AS configurationNumber,
+		Maintenance_Time AS maintenanceTime,
+		delete_state AS deleteState,
+		Country_ID AS countryID 
+	FROM
+		t_gather_rules_source 
+		where Attribution_Information='全国'
+    </select>
+    <select id="findSearchEngineSource"  resultType="com.zkdj.urlCheck.spring_boot_1.main.java.model.SearchEngineSource"> 
+    SELECT
+    	ID as id,
+		Regular_Name AS regularName,
+		Index_URL AS indexURL,
+		Attribution_Information AS attributionInformation,
+		LEVEL AS LEVEL,
+		Website_Nature AS websiteNature,
+		Competent_Units AS competentUnits,
+		Carrier_ID AS carrierID,
+		Configuration_Number AS configurationNumber,
+		Maintenance_Time AS maintenanceTime,
+		delete_state AS deleteState,
+		Country_ID AS countryID 
+	FROM
+		t_search_engine_source 
+    </select>
+    <select id="findGovernmentUnitSS"  parameterType="com.zkdj.urlCheck.spring_boot_1.main.java.utils.PagingInfo" resultType="com.zkdj.urlCheck.spring_boot_1.main.java.model.GovernmentUnit">
+        select t.ID,t.Regular_name  regularName,t.Index_URL indexUrl,t.Level level,t.Configuration_Number configurationNumber,t.Competent_Units competentUnits
+        from t_gather_rules_source t
+        WHERE 1 = 1
+        LIMIT
+        ${pageIndex},${pageSize}
+    </select>
+    <select id="findGovernmentUnitCount"  parameterType="com.zkdj.urlCheck.spring_boot_1.main.java.utils.PagingInfo" resultType="Integer">
+        SELECT count(*) from t_gather_rules_source
+    </select>
+    <select id="findBaMain"  parameterType="com.zkdj.urlCheck.spring_boot_1.main.java.utils.PagingInfo" resultType="com.zkdj.urlCheck.spring_boot_1.main.java.model.BaMain">
+        SELECT
+		DISTINCT	t2.`网站首页网址`,t1.`备案许可证号`,t1.`主办单位名称`,t1.`主办单位性质`,t2.`网站名称` ,t2.`网站负责人姓名`,t2.`网站域名`,t2.id
+		FROM
+		ba_main t1
+		INNER JOIN ba_detail t2 ON t1.guid = t2.guid 
+		LIMIT 
+        ${pageIndex},${pageSize}
+    </select>
+    <select id="findBaMainCount"  parameterType="com.zkdj.urlCheck.spring_boot_1.main.java.utils.PagingInfo" resultType="Integer">
+        SELECT count(*) from ba_detail
+    </select>
+    <select id="findWordName"  resultType="String">
+        SELECT name FROM word
+    </select>
+    <select id="findByEntityId"  resultType="Integer">
+        SELECT word_id FROM relation_word_entity where entity_id=#{entityId}
+    </select>
+    <select id="findWordIdsByName"   resultType="java.lang.Integer">
+        SELECT
+        id
+        FROM
+        word 
+        WHERE `name`
+        in 
+        <foreach item="item" index="index" collection="collection" open="(" separator="," close=")"> 
+    		#{item} 
+		</foreach> 
+    </select>
+</mapper>

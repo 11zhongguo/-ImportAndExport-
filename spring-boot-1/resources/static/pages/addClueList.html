@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>线索管理</title>
+    <!-- Bootstrap -->
+    <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap-daterangepicker -->
+    <link href="../vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    <link rel="stylesheet" href="./vendors/bootstrap/dist/js/bootstrap-table.css">
+    <style type="text/css">
+        .city-select-content {
+            width: 100%;
+            min-height: 10px;
+            background-color: #fff;
+            padding: 10px 15px;
+        }
+
+        .city-picker-dropdown {
+            left: -92% !important;
+        }
+    </style>
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+            <div class="">
+                <div class="clearfix"></div>
+
+                <div class="row">
+                    <div class="col-md-12 col-xs-12">
+                        <div class="x_panel">
+                            <div style="margin-bottom: -15px;">
+                                <h2>
+                                    <a href="addClue" class="btn btn-primary">+线索登记</a>
+                                </h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <form class="form-horizontal form-label-left input_mask">
+                                    <table id="table">
+                                    </table>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="../vendors/jquery/dist/jquery.min.js"></script>
+<!-- jQuery.form -->
+<script src="./js/jquery.form.js"></script>
+<!-- Bootstrap -->
+<script src="../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- bootstrap-progressbar -->
+<script src="../vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+<!-- bootstrap-daterangepicker -->
+<script src="../vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap-wysiwyg -->
+<script src="../vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js"></script>
+<!-- jQuery Tags Input -->
+<script src="../vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
+<script src="./vendors/bootstrap/dist/js/bootstrap-table.js"></script>
+<script src="./vendors/bootstrap/dist/js/bootstrap-table-zh-CN.js"></script>
+
+</body>
+
+<script>
+    $(function () {
+        get();
+
+    var Identification = 1;
+    //加载分页数据
+    function get() {
+        $("#table").bootstrapTable("destroy");
+
+
+        $("#table").bootstrapTable({
+            url: "/apis/gather/findData",
+            method: "post",
+            contentType: "application/x-www-form-urlencoded",
+            ajax: undefined,
+            sidePagination: "server",
+            queryParams: function (params) {
+                var param = {
+                    limit: params.limit,
+                    offset: params.offset,
+                };
+                return param;
+            },
+            toolbar: '#toolbar',
+            striped: false,
+            cache: false,
+            pagination: true,
+            sortable: false,
+            sortOrder: "desc",
+            pageNumber: 1,
+            pageSize: 10,
+            pageList: [10, 20],
+            columns: [{
+                field: 'id',
+                title: '线索ID',
+                align: "center",
+            }, {
+                field: 'company',
+                title: '单位名称',
+            }, {
+                field: 'phone',
+                title: '电话号',
+                align: "center",
+            }, {
+                field: 'industryName',
+                title: '行业',
+                align: "center",
+            }, {
+                field: 'city',
+                title: '地区',
+                align: "center",
+            }, {
+                field: 'clientSourceString',
+                title: '线索来源',
+                align: "center",
+            }, {
+                field: 'customerStatus',
+                title: '客户关系',
+                align: "center",
+            }, {
+                field: 'isAssign',
+                title: '线索状态',
+                align: "center",
+            }, {
+                field: 'assignorName',
+                title: '指派给',
+                align: "center",
+            }, {
+                field: 'distTime',
+                title: '指派时间',
+                align: "center",
+            }, {
+                field: 'registerTimeStr',
+                title: '登记时间',
+                align: "center",
+            }, {
+                field: 'createName',
+                title: '登记人',
+                align: "center",
+            }, {
+                field: 'id',
+                title: '操作',
+                align: "center",
+            }]
+        })
+    }
+
+
+
+</script>
+</html>

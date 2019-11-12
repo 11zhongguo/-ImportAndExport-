@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>国家信息中心ICP网站数据接口</title>
+    <!-- Bootstrap -->
+    <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap-daterangepicker -->
+    <link href="../vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    <link rel="stylesheet" href="../vendors/bootstrap/dist/js/bootstrap-table.css">
+    <style type="text/css">
+        .city-select-content {
+            width: 100%;
+            min-height: 10px;
+            background-color: #fff;
+            padding: 10px 15px;
+        }
+
+        .city-picker-dropdown {
+            left: -92% !important;
+        }
+    </style>
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+            <div class="">
+                <div class="clearfix"></div>
+
+                <div class="row">
+                    <div class="col-md-12 col-xs-12">
+                        <div class="x_panel">
+                            <div style="margin-bottom: -15px;">
+                                <h2>
+                                    <a href="" class="btn btn-primary">国家信息中心ICP网站数据接口</a>
+                                </h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <form class="form-horizontal form-label-left input_mask">
+                                    <table id="table">
+                                    </table>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="../vendors/jquery/dist/jquery.min.js"></script>
+<!-- jQuery.form -->
+<script src="../js/jquery.form.js"></script>
+<!-- Bootstrap -->
+<script src="../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- bootstrap-progressbar -->
+<script src="../vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+<!-- bootstrap-daterangepicker -->
+<script src="../vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap-wysiwyg -->
+<script src="../vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js"></script>
+<!-- jQuery Tags Input -->
+<script src="../vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
+<script src="../vendors/bootstrap/dist/js/bootstrap-table.js"></script>
+<script src="../vendors/bootstrap/dist/js/bootstrap-table-zh-CN.js"></script>
+
+</body>
+
+<script>
+    $(function () {
+        get();
+
+    var Identification = 1;
+    //加载分页数据
+    function get() {
+        $("#table").bootstrapTable("destroy");
+
+
+        $("#table").bootstrapTable({
+            url: "/gather/findBaMain",
+            dataType: "json",
+            method: "post",
+            contentType: "application/x-www-form-urlencoded",
+            ajax: undefined,
+            sidePagination: "server",
+            responseHandler: function(res){
+            	return {
+            		'rows': res.data.list,
+            		'total': res.data.totalCount
+            	}
+            },
+            queryParams: function (params) {
+                var param = 
+                {
+                		pageSize:params.limit,
+                		pageIndex:params.offset
+                }
+                /* {
+                    limit: params.limit,
+                    offset: params.offset,
+                }; */
+                return param;
+            },
+            
+            toolbar: '#toolbar',
+            striped: false,
+            cache: false,
+            pagination: true,
+            sortable: false,
+            sortOrder: "desc",
+            pageNumber: 1,
+            pageSize: 10,
+            pageList: [10,15,20],
+            columns: [{
+                field: 'id',
+                title: 'ID',
+                align: "center",
+            },{
+                field: '网站名称',
+                title: '网站名称',
+                align: "center",
+            }, {
+                field: '网站首页网址',
+                title: '网站首页网址',
+                align: "center",
+            }, {
+                field: '主办单位名称',
+                title: '主办单位名称',
+            }, {
+                field: '主办单位性质',
+                title: '主办单位性质',
+                align: "center",
+            },  {
+                field: '网站负责人姓名',
+                title: '网站负责人姓名',
+                align: "center",
+            }, {
+                field: '网站域名',
+                title: '网站域名',
+                align: "center",
+            }, {
+                field: '备案许可证号',
+                title: '备案许可证号',
+                align: "center",
+            }]
+        })
+    }
+
+ });
+
+</script>
+</html>
